@@ -1,8 +1,8 @@
 `My site`
 
-[<img src="https://img.shields.io/badge/@bordercollie.95-E4405F?style=for-the-badge&logo=Instagram&logoColor=white">](https://www.instagram.com/bordercollie.95/)
-[<img src="https://img.shields.io/badge/@colley0326-20C997?style=for-the-badge&logo=Velog&logoColor=white">](https://velog.io/@colley0326)
-[<img src="https://img.shields.io/badge/mysite-F68315?style=for-the-badge&logo=HomeAdvisor&logoColor=white">](https://longboard.monster/)
+[<img src="https://img.shields.io/badge/@bordercollie.95-E4405F?style=for-the-badge&logo=Instagram&logoColor=white">](https://www.instagram.com/bordercollie.95/){:target="_blank"}
+[<img src="https://img.shields.io/badge/@colley0326-20C997?style=for-the-badge&logo=Velog&logoColor=white">](https://velog.io/@colley0326){:target="_blank"}
+[<img src="https://img.shields.io/badge/mysite-F68315?style=for-the-badge&logo=HomeAdvisor&logoColor=white">](https://longboard.monster/){:target="_blank"}
 
 ---
 
