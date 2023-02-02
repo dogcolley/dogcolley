@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="kr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Clone 이벤트 인식 문제 해결</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="./js/extend.js"></script>
+  <link rel="stylesheet" href="./css/reset.css">
+
+	<script type="text/javascript">
+		$(function(){
+            $('#cl_btn button').on('click',function(){
+                $('#cd_cl').append($(this).clone());
+                $('#cd_cl button').on('click',function(){
+                    $(this).remove();           
+                });
+            });
+            	
+             var email = '안dd'
+             
+             var test_list = ['감자','고구마','양파','대파'];
+             var con_list = ['감자','고구마','양파'];
+            
+             var regex ='';
+             for(var i = 0 ; i < con_list.length; i++){
+                 regex += con_list[i]
+                 if(i !== con_list.length)regex+='|';
+                 
+             }
+            console.log('마라톤선수명단 : '+test_list)
+            console.log('완주자명단 : '+con_list)
+            regex = `/|${regex}/`;
+            console.log(regex);
+            
+            for(var i = 0 ; i < test_list.length; i++){
+                 if(!test_list[i].match(regex)){
+                     console.log(test_list[i]+'는 완주하지 못했습니다.')
+                 };
+             }
+            
+            /*
+             if(regex.test(email) === false){
+              alert('잘못된 이메일 형식입니다.');
+              return false;    
+             }
+             */
+		});
+	</script>
+	
+	<style type="text/css">
+		#test_form{width:600px;margin:5% auto 10%}
+
+	</style>
+
+ </head>
+ <body>
+		<h2 class="T_ft_ct T_ft_xl" style="margin-top:10%">Clone_test</h2>
+        <div class="mk_cl" id="cl_btn">
+            <button type="button" class="cl_btn">클론생성버튼</button>
+        </div>
+        <div class="cd_cl" id="cd_cl">
+            <h3>클론이 생성되는 부분입니다.</h3>
+            
+        </div>
+        <div class="cd_cl2">
+            <h3>생성된 클론의 변경박스입니다.</h3>
+            <div id="box"></div>
+        </div>
+ </body>
+</html>

@@ -1,0 +1,189 @@
+<?php
+//if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
+include_once('./_common.php');
+include_once(G5_EDITOR_LIB);
+include_once(G5_CAPTCHA_PATH.'/captcha.lib.php');
+
+$rDate = $_GET['rDate'];
+$rShip = $_GET['rShip'];
+$rCnt = $_GET['rCnt'];
+$write = $_GET['write'];
+$wr_id = $_GET['wr_id'];
+$total_per = $_GET['tper'];
+$write_table = $g5['write_prefix'] . $bo_table;
+
+if($write == "u" && !$row) {
+	$row = get_write($write_table, $wr_id);
+	$w = "u";
+	$del = "d";
+	$ca = "ca";
+	set_session('ss_bo_table', $bo_table);
+	set_session('ss_wr_id', $wr_id);
+	set_session('ss_delete_token', $dToken = uniqid(time()));
+}
+
+$action_url = https_url(G5_BBS_DIR)."/write_update.php";
+
+$captcha_html = '';
+$captcha_js   = '';
+if ($is_guest) {
+    $captcha_html = captcha_html();
+    $captcha_js   = chk_captcha_js();
+}
+
+$token = get_session('ss_write_'.$bo_table.'_token');
+set_session('ss_write_'.$bo_table.'_token', '');
+
+$vew_month = $rDate;
+$curr_year = date( 'Y' );
+
+unset($arr_db);
+$arr_db = array();
+?>
+
+<div id="listform">
+	
+	<form name="fwrite" id="fwrite" action="<?php echo $action_url ?>" onsubmit="return fwrite_submit(this);" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" name="w" value="<?php echo $w ?>">
+    <input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
+    <input type="hidden" name="wr_id" value="<?php echo $wr_id ?>">
+	<input type="hidden" name="wr_2" id="resDate" value="<?=$rDate?>"/>
+	<input type="hidden" name="wr_3" id="resShip" value="<?=$rShip?>"/>
+	<input type="hidden" name="ca_name" id="ca_name" value="예약대기"/>
+	<input type="hidden" name="wr_subject" id="wr_subject" value="예약신청"/>
+	<input type="hidden" name="wr_content" id="wr_content" value="."/>
+    <input type="hidden" name="bo_edit" value="<?php echo $write ?>">
+    <input type="hidden" name="total_per" value="<?=$rCnt?>">
+    <input type="hidden" name="upd" value="">
+    <input type="hidden" name="ca" value="">
+    <input type="hidden" name="date" value="">
+    <input type="hidden" name="dToken" value="<?=$dToken?>">
+
+	<div class="cal_list table-responsive">
+
+		
+		<table class="table table-sm table-bordered">
+			<thead>
+				<tr>
+					<td colspan="6">날짜</td>
+				</tr>
+				<th>
+					<td>이름 / 연락처</td>
+					<td>종류</td>
+					<td>인원수</td>
+					<td>금액 / 예약금</td>
+					<td>상태</td>
+				</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td rowspan="">A호</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+
+	</div>
+
+	<p><input type="submit" id="btn_submit" accesskey="s" class="btn btn-primary btn-block" <? if($row) { ?>value="수정하기"<?}else{?>value="예약신청"<? } ?>></p>
+	<? if($row && $member[mb_level] >= 8) { ?>
+	<p style="margin:5px 0;"><input type="submit" id="btn_submit" accesskey="s" class="btn btn-info btn-block" <? if($row[ca_name] == "예약대기") { ?>value="예약완료처리"<? }else{ ?>value="예약대기처리"<? } ?> onclick="document.pressed=this.value"></p>
+	<p><input type="submit" id="btn_submit" accesskey="s" class="btn btn-danger btn-block" value="삭제하기" onclick="document.pressed=this.value"></p>
+	<? } ?>
+
+	</form>
+
+</div>
+
+<script src="<?=$board_skin_url?>/js/jquery.number.min.js"></script>
+<script>	
+$( '.num_' ).number( true );
+var $board_skin_url = "<?php echo $board_skin_url; ?>";
+
+
+function fwrite_submit(f)
+{	
+	if(document.pressed == "삭제하기") {
+
+        if (!confirm("한번 삭제한 자료는 복구할 수 없습니다.\n\n정말 삭제하시겠습니까?"))
+            return false;
+		
+		f.upd.value = "<?php echo $del ?>";
+		f.date.value = "<?php echo $rDate ?>";
+        f.action = "<?php echo $board_skin_url ?>/board_update.php";
+    }
+
+	if(document.pressed == "예약완료처리") {
+		f.upd.value = "<?php echo $ca ?>";
+		f.ca.value = "예약완료";
+		f.date.value = "<?php echo $rDate ?>";
+        f.action = "<?php echo $board_skin_url ?>/board_update.php";
+    }
+
+	if(document.pressed == "예약대기처리") {
+		f.upd.value = "<?php echo $ca ?>";
+		f.ca.value = "예약대기";
+		f.date.value = "<?php echo $rDate ?>";
+        f.action = "<?php echo $board_skin_url ?>/board_update.php";
+    }
+
+	document.getElementById("btn_submit").disabled = "disabled";
+
+	return true;
+}
+
+$(document).ready(function(){
+	
+	$("#wr_6").on("change", function(){
+
+		var sel_v = $("#wr_6 option:selected").val();
+
+		var total = 0;
+		var total_r = 0;
+		
+		var chk_value = $("input[name=wr_5]:checked").data('id');
+		var basic = chk_value.split("|");
+
+		$("input[name=wr_5]:checked").each(function(){
+			total += Number(basic[1]);
+			total_r += Number(basic[2]);
+		});
+
+
+		$("#wr_7_text").text($.number(total * sel_v));
+		$("#wr_8_text").text($.number(total_r * sel_v));
+
+		$("#wr_7_total").val(total * sel_v);
+		$("#wr_8_total").val(total_r * sel_v);
+
+	});
+
+	$("input[name=wr_5]").on("change", function(){
+
+		var sel_v = $("#wr_6 option:selected").val();
+
+		var total = 0;
+		var total_r = 0;
+		var basic = $("input[name=wr_5]:checked").data('id').split("|");
+
+		$("input[name=wr_5]:checked").each(function(){
+			total += Number(basic[1]);
+			total_r += Number(basic[2]);
+		});
+
+		$("#wr_7_text").text($.number(total * sel_v));
+		$("#wr_8_text").text($.number(total_r * sel_v));
+
+		$("#wr_7_total").val(total * sel_v);
+		$("#wr_8_total").val(total_r * sel_v);
+	});
+
+});
+
+</script>
