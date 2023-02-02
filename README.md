@@ -1,5 +1,5 @@
 
-`Template 저장소 (개발자 개밥의자료 모음 )`
+`dogcolley 저장소 (개발자 개밥의자료 모음 )`
 ---
 
 `My site`
@@ -16,11 +16,9 @@
 ---
 
 `카테고리`
-> [참고사이트 모음](https://github.com/dogcolley/Template/tree/master/md/Link.md)
+> [참고사이트 모음](https://github.com/dogcolley/dogcolley/tree/master/md/Link.md)
 
-> [프론트참고 모음](https://github.com/dogcolley/Template/tree/master/md/FrontEnd.md)
-
-
+> [프론트참고 모음](https://github.com/dogcolley/dogcolley/tree/master/md/FrontEnd.md)
 
 `작업물`
 
